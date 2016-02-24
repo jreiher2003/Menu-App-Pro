@@ -5,3 +5,4 @@ venv/
 coverage/
 *.ini
 *.log
+.coverage
