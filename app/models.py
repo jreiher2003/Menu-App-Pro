@@ -1,5 +1,6 @@
 import datetime # pragma: no cover
 from app import db # pragma: no cover
+from slugify import slugify # pragma: no cover
 
 class Place(db.Model):
 
@@ -27,6 +28,10 @@ class Place(db.Model):
     	self.phone = phone 
     	self.owner = owner
     	self.yrs_open = yrs_open
+
+    @property 
+    def name_slug(self):
+        return slugify(self.name)
 
     def __repr__(self):
         return '<Place %r>' % (self.name)

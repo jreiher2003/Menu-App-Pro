@@ -5,7 +5,7 @@
 {% block content %}
 
 {% for place in all_places %}
-	<a href="#">{{ place.name }}</a><br>
+	<a href="{{ url_for('place_menu', place_id=place.id,place_name=place.name_slug) }}">{{ place.name }}</a><br>
 {% endfor %}
 
 {% endblock %}
