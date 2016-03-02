@@ -3,6 +3,7 @@
 {% block description %}{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('create_new_place') }}">Create New Restauarnt</a><br><br>
 
 {% for place in all_places %}
 	<a href="{{ url_for('place_menu', place_id=place.id,place_name=place.name_slug) }}">{{ place.name }}</a><br>
@@ -11,7 +12,10 @@
 	<a href="#">{{ place.website }}</a><br>
 	{{ place.phone }}<br>
 	{{ place.owner }}<br>
-	{{ yrs_open }}<br><br>
+	{{ yrs_open }}
+	<a href="{{ url_for('place_edit',place_id=place.id,place_name=place.name_slug) }}">Edit</a>&nbsp;|&nbsp;
+	<a href="{{ url_for('place_delete',place_id=place.id,place_name=place.name_slug) }}">Delete</a>
+	<br><br>
 {% endfor %}
 
 {% endblock %}
