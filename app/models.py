@@ -48,5 +48,9 @@ class Menu(db.Model):
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     place = db.relationship(Place)
 
+    @property 
+    def name_slug(self):
+        return slugify(self.name)
+
     def __repr__(self):
         return '<MenuItem %r>' % (self.name)

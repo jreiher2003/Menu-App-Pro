@@ -12,7 +12,7 @@
 	<a href="#">{{ place.website }}</a><br>
 	{{ place.phone }}<br>
 	{{ place.owner }}<br>
-	{{ yrs_open }}
+	{{ place.yrs_open }}<br>
 	<a href="{{ url_for('place_edit',place_id=place.id,place_name=place.name_slug) }}">Edit</a>&nbsp;|&nbsp;
 	<a href="{{ url_for('place_delete',place_id=place.id,place_name=place.name_slug) }}">Delete</a>
 	<br><br>
