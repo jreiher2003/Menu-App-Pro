@@ -1,6 +1,6 @@
-<a href="{{ url_for('create_new_menu_item') }}">create new menu item</a><br><br>
+<h2>{{ place.name }}</h2>
+<a href="{{ url_for('create_new_menu_item', place_id=place.id,place_name=place.name_slug) }}">create new menu item</a><br><br>
 {% for menu in menuitems %}
-{{ menu.place.name }}<br>
 	{{ menu.id }}<br>
 	{{ menu.name }}<br>
 	{{ menu.course }}<br>

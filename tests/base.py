@@ -1,7 +1,7 @@
 import datetime
 from flask.ext.testing import TestCase
 from app import app, db
-from app.models import Place
+from app.models import Place, Menu
 
 
 class BaseTestCase(TestCase):
@@ -13,7 +13,21 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         db.create_all()
-        db.session.add(Place(name='Testname'))
+        db.session.add(Place(name='Testname',
+                             address="123 Test st.",
+                             city="Englewood",
+                             state="Florida",
+                             zip_="34224",
+                             website="http://fake.com",
+                             phone="123-456-7899",
+                             owner="Jeff Reiher",
+                             yrs_open=1))
+
+        db.session.add(Menu(name="burger",
+                            course="dinner",
+                            description="test description",
+                            price="$1.00"))
+
         
         db.session.commit()
 
