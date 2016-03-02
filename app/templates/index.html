@@ -6,6 +6,12 @@
 
 {% for place in all_places %}
 	<a href="{{ url_for('place_menu', place_id=place.id,place_name=place.name_slug) }}">{{ place.name }}</a><br>
+	{{ place.address }}<br>
+	{{ place.city }},&nbsp;{{ place.state }}&nbsp;{{ place.zip_ }}<br>
+	<a href="#">{{ place.website }}</a><br>
+	{{ place.phone }}<br>
+	{{ place.owner }}<br>
+	{{ yrs_open }}<br><br>
 {% endfor %}
 
 {% endblock %}
