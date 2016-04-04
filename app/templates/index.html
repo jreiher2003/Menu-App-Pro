@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block title %}Englewood Grub{% endblock %}
 {% block description %}{% endblock %}
 
@@ -6,15 +6,15 @@
 <a href="{{ url_for('create_new_place') }}">Create New Restauarnt</a><br><br>
 
 {% for place in all_places %}
-	<a href="{{ url_for('place_menu', place_id=place.id,place_name=place.name_slug) }}">{{ place.name }}</a><br>
+	<a href="{{ url_for('place_menu', place_id=place.id) }}">{{ place.name }}</a><br>
 	{{ place.address }}<br>
 	{{ place.city }},&nbsp;{{ place.state }}&nbsp;{{ place.zip_ }}<br>
 	<a href="#">{{ place.website }}</a><br>
 	{{ place.phone }}<br>
 	{{ place.owner }}<br>
 	{{ place.yrs_open }}<br>
-	<a href="{{ url_for('place_edit',place_id=place.id,place_name=place.name_slug) }}">Edit</a>&nbsp;|&nbsp;
-	<a href="{{ url_for('place_delete',place_id=place.id,place_name=place.name_slug) }}">Delete</a>
+	<a href="{{ url_for('place_edit',place_id=place.id) }}">Edit</a>&nbsp;|&nbsp;
+	<a href="{{ url_for('place_delete',place_id=place.id) }}">Delete</a>
 	<br><br>
 {% endfor %}
 
