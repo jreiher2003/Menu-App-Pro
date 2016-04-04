@@ -41,31 +41,31 @@ class TestFrontPage(BaseTestCase):
             assert request.method == "GET"
 
     def test_create_new_restaurant(self):
-        response = self.client.get("/create-new-restaurant/")
+        response = self.client.get("/restaurant/new")
         assert response.status_code == 200
 
     def test_place_name(self):
-        response = self.client.get("/1/Testname/")
+        response = self.client.get("/restaurant/1/menu")
         assert response.status_code == 200
 
     def test_place_edit(self):
-        response = self.client.get("/1/Testname/edit/")
+        response = self.client.get("/restaurant/1/edit")
         assert response.status_code == 200
 
     def test_place_delete(self):
-        response = self.client.get("/1/Testname/delete/")
+        response = self.client.get("/restaurant/1/delete")
         assert response.status_code == 200
 
     def test_create_new_menu_item(self):
-        response = self.client.get("/1/Testname/create-new-menu-item/")
+        response = self.client.get("/restaurant/1/new")
         assert response.status_code == 200
 
     def test_menu_edit(self):
-        response = self.client.get("/1/Testname/1/burger/edit/")
+        response = self.client.get("/restaurant/1/menu/1/edit")
         assert response.status_code == 200
 
     def test_menu_delete(self):
-        response = self.client.get("/1/Testname/1/burger/delete/")
+        response = self.client.get("/restaurant/1/menu/1/delete")
         assert response.status_code == 200
 
 
