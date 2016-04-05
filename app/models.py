@@ -18,16 +18,16 @@ class Place(db.Model):
     yrs_open = db.Column(db.Integer)
 
 
-    def __init__(self, name, address, city, state, zip_, website, phone, owner, yrs_open):
-    	self.name = name
-    	self.address = address
-    	self.city = city
-    	self.state = state
-    	self.zip_ = zip_
-    	self.website = website
-    	self.phone = phone 
-    	self.owner = owner
-    	self.yrs_open = yrs_open
+    # def __init__(self, name):
+    # 	self.name = name
+    	# self.address = address
+    	# self.city = city
+    	# self.state = state
+    	# self.zip_ = zip_
+    	# self.website = website
+    	# self.phone = phone 
+    	# self.owner = owner
+    	# self.yrs_open = yrs_open
 
     @property 
     def name_slug(self):
