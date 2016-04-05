@@ -2,4 +2,11 @@
 {% block title %}Edit Restaurant{% endblock %}
 {% block content %}
 edit restaurant template {{ place_id }}
+<h1>Edit restaurant profile</h1>
+<form action="" method="post">
+    <label for="place">Name</label>
+    <input type="text" name="name" placeholder="{{ place_id }}">
+    <input type="submit" value="Edit">
+    <a href="#">cancel</a>
+</form>
 {% endblock %}
