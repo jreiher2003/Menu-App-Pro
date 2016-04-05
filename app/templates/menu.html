@@ -7,8 +7,8 @@
 	{{ menu.description }}<br>
 	{{ menu.price }}<br>
 	
-	<a href="{{ url_for('edit_menu_items', place_id=menu.place.id, menu_id=menu.id) }}">Edit</a>
-	<a href="{{ url_for('delete_menu_items', place_id=menu.place.id, menu_id=menu.id) }}">Delete</a>
+	<a href="{{ url_for('edit_menu_item', place_id=menu.place.id, menu_id=menu.id) }}">Edit</a>
+	<a href="{{ url_for('delete_menu_item', place_id=menu.place.id, menu_id=menu.id) }}">Delete</a>
 	<hr>
 	<br>
 {% endfor %}
