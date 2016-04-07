@@ -78,17 +78,56 @@ def show_menu(place_id):
 		menuitems=menuitems
 		)
 
-@app.route("/restaurant/<int:place_id>/menu/new")
+@app.route("/restaurant/<int:place_id>/menu/new", methods=["GET", "POST"])
 def new_menu_item(place_id):
-	return render_template("new_menu.html", place_id=place_id)
+	if request.method == "POST":
+		new_menu = Menu(
+			name = request.form["name"],
+			course = request.form["course"],
+			description = request.form["description"],
+			price = request.form["price"],
+			place_id = place_id
+			)
+		db.session.add(new_menu)
+		db.session.commit()
+		flash("Just add a new menu item", "success")
+		return redirect(url_for("show_menu", place_id=place_id))
+	return render_template(
+		"new_menu.html", 
+		place_id=place_id)
 
-@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/edit")
+@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/edit", methods=["GET","POST"])
 def edit_menu_item(place_id,menu_id):
-	return render_template("edit_menu.html", place_id=place_id, menu_id=menu_id)
+	edit_menu = Menu.query.filter_by(id=menu_id).one()
+	if request.method == "POST":
+		edit_menu.name = request.form["name"]
+		edit_menu.course = request.form["course"]
+		edit_menu.description = request.form["description"]
+		edit_menu.price = request.form["price"]
+		db.session.add(edit_menu)
+		db.session.commit()
+		flash("Just edited menu item")
+		return redirect(url_for("show_menu", place_id=place_id))
+	return render_template("edit_menu.html", 
+		place_id=place_id, 
+		menu_id=menu_id,
+		edit_menu=edit_menu
+		)
 
-@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/delete")
+@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/delete", methods=["GET","POST"])
 def delete_menu_item(place_id,menu_id):
-	return render_template("delete_menu.html", place_id=place_id, menu_id=menu_id)
+	delete_menu = Menu.query.filter_by(id=menu_id).one()
+	if request.method == "POST":
+		db.session.delete(delete_menu)
+		db.session.commit()
+		flash("You just deleted %s" % delete_menu.name, "danger")
+		return redirect(url_for("show_menu", place_id=place_id))
+	return render_template(
+		"delete_menu.html", 
+		place_id=place_id, 
+		menu_id=menu_id,
+		delete_menu=delete_menu
+		)
 
 @app.route("/api/")
 def api():

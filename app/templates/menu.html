@@ -1,5 +1,6 @@
 
 <h2>{{ place.name }}</h2>
+<a href="{{ url_for('show_places') }}">back</a><br>
 <a href="{{ url_for('new_menu_item', place_id=place.id) }}">create new menu item</a><br><br>
 {% if menuitems %}
 	{% for menu in menuitems %}
