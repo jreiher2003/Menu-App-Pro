@@ -18,16 +18,20 @@ class Place(db.Model):
     yrs_open = db.Column(db.Integer)
 
 
-    # def __init__(self, name):
-    # 	self.name = name
-    	# self.address = address
-    	# self.city = city
-    	# self.state = state
-    	# self.zip_ = zip_
-    	# self.website = website
-    	# self.phone = phone 
-    	# self.owner = owner
-    	# self.yrs_open = yrs_open
+    @property 
+    def serialize(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "address" : self.address,
+            "city" : self.city,
+            "state" : self.state,
+            "zip_" : self.zip_,
+            "website" : self.website,
+            "phone" : self.phone,
+            "owner" : self.owner,
+            "yrs_open" : self.yrs_open
+        } 
 
     @property 
     def name_slug(self):
@@ -51,6 +55,16 @@ class Menu(db.Model):
     @property 
     def name_slug(self):
         return slugify(self.name)
+
+    @property 
+    def serialize(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "course" : self.course,
+            "description" : self.description,
+            "price" : self.price
+        } 
 
     def __repr__(self):
         return '<MenuItem %r>' % (self.name)

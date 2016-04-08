@@ -1,6 +1,6 @@
 from app import app,db # pragma: no cover
 from app.models import Place, Menu # pragma: no cover
-from flask import render_template, request, url_for, redirect, flash # pragma: no cover
+from flask import render_template, request, url_for, redirect, flash, jsonify # pragma: no cover
 
 @app.route("/") 
 @app.route("/restaurants")
@@ -132,3 +132,18 @@ def delete_menu_item(place_id,menu_id):
 @app.route("/api/")
 def api():
 	return "this is api page"
+
+@app.route("/restaurant/JSON/")
+def restaurant_json():
+	places = Place.query.all()
+	return jsonify(Restaurants=[i.serialize for i in places])
+
+@app.route("/restaurant/<int:place_id>/menu/JSON")
+def menu_json(place_id):
+	menu = Menu.query.filter_by(place_id=place_id).all()
+	return jsonify(MenuItems=[i.serialize for i in menu])
+
+@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/JSON")
+def single_menu_item(place_id, menu_id):
+	menu = Menu.query.filter_by(id=menu_id).all()
+	return jsonify(MenuItem=[i.serialize for i in menu])
