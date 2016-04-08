@@ -1,2 +1,10 @@
-html {}
-body {}
+html {
+    background-color: blue;
+}
+body {
+
+}
+.footer {
+    height: 200px;
+    background-color: grey;
+}
