@@ -1,11 +1,9 @@
-html {
-    background-color: blue;
-}
-body {
-
-}
-
+html {}
+body {}
+ a {
+    color: #777;
+ }
 .footer {
     height: 200px;
-    background-color: grey;
+    background-color: #777;
 }
