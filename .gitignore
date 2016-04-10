@@ -6,3 +6,4 @@ coverage/
 *.ini
 *.log
 .coverage
+*.sh
