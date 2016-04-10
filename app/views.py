@@ -1,6 +1,7 @@
 from app import app,db # pragma: no cover
 from app.models import Place, Menu # pragma: no cover
 from flask import render_template, request, url_for, redirect, flash, jsonify # pragma: no cover
+import us # pragma: no cover 
 
 @app.route("/") 
 @app.route("/restaurants")
@@ -12,6 +13,7 @@ def show_places():
 
 @app.route("/restaurant/new", methods=["GET", "POST"])
 def new_place():
+	states = us.states.STATES 
 	if request.method == "POST":
 		new = Place(
 			name=request.form["name"],
@@ -28,7 +30,7 @@ def new_place():
 		db.session.commit()
 		flash("You just added a new restaurant", "success")
 		return redirect(url_for("show_places"))
-	return render_template("new_restaurant.html")
+	return render_template("new_restaurant.html", states=states)
 
 @app.route("/restaurant/<int:place_id>/edit", methods=["GET", "POST"])
 def edit_place(place_id):
