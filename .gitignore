@@ -1,9 +1,8 @@
 *.pyc 
 *.db
-venv/
+env/
 *.bat
 coverage/
-*.ini
 *.log
-.coverage
-*.sh
+requirements1.txt
+
