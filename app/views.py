@@ -149,3 +149,17 @@ def menu_json(place_id):
 def single_menu_item(place_id, menu_id):
 	menu = Menu.query.filter_by(id=menu_id).all()
 	return jsonify(MenuItem=[i.serialize for i in menu])
+
+
+################################################################
+###  Google + login ############################################
+################################################################
+from flask import session as login_session 
+import random
+import string
+
+@app.route("/login")
+def show_login():
+	state = "".join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+	login_session["state"] = state 
+	return " the current session state is %s" % login_session["state"]
