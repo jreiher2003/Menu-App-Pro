@@ -8,7 +8,7 @@ A editable menu app for one or more Restaurants
 This app performs all CRUD functionality on Restaurants and their menu items.  
 
 ### Tech Stack
-*vagrant trusty/64
-*PostgreSQL
-*python27
-*flask
+**vagrant trusty/64
+**PostgreSQL
+**python27
+**flask
