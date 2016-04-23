@@ -186,7 +186,7 @@ def google_signin():
     code = request.data
     try:
         oauth_flow = flow_from_clientsecrets("client_secrets.json", scope="")
-        # pprint(dir(oauth_flow))
+        pprint(type(oauth_flow))
         # print oauth_flow.auth_uri
         # print oauth_flow.authorization_header
         # print oauth_flow.device_uri
@@ -205,9 +205,11 @@ def google_signin():
         return response  
 
     access_token = credentials.access_token 
+    print access_token
     url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s" % access_token)
     h = httplib2.Http() 
     result = json.loads(h.request(url, "GET")[1])
+    print result
 
     if result.get("error") is not None:
         response = make_response(json.dumps(result.get("error")), 500)
@@ -253,6 +255,43 @@ def google_signin():
     print "done!"
     return output
 
-@app.route("/g_login_status")
+
+@app.route("/gdisconnect")
+def disconnect():
+    access_token = login_session["credentials"]
+    print access_token
+    print login_session["username"]
+
+    if access_token is None:
+        response = make_response(json.dumps("Current user not connected"), 401)
+        reponse.headers["Content-Type"] = "application/json"
+        return response 
+   
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    print url
+    h = httplib2.Http()
+    result = h.request(url, "GET")[0]
+    print result
+
+    if result["status"] == 200:
+        del login_session["credentials"]
+        del login_session["gplus_id"]
+        del login_session["username"]
+        del login_session["name"]
+        del login_session["email"]
+        del login_session["picture"] 
+
+        response = make_response(json.dumps("You just disconnected"), 200)
+        response.header["Content-Type"] = "application/json"
+        return response 
+
+    else:
+        response = make_response(json.dumps("Failed to revoke token for given user."), 400)
+        response.headers["Content-Type"] = "application/json"
+        return response 
+
+
+
+@app.route("/g_login_status/")
 def show_me():
     return "yo <img src='%s'><br>%s<br>%s" % (login_session["picture"], login_session["username"], login_session["email"])
