@@ -26,8 +26,13 @@
 				<li><a href="#">Page 3</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-		        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-		        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				{% if session["username"] %}
+					<li><a href="#">{{ session["name"] }}</a></li>
+					<li><img class="googlepic" src="{{ session['picture'] }}"></li>
+				{% else %}
+		            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+		            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+		        {% endif %}
 		    </ul>
 		</div>
 	</nav>
@@ -50,5 +55,6 @@
 		<!-- </div> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
 </body>
 </html>
