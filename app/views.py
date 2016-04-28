@@ -1,7 +1,9 @@
 from app import app,db # pragma: no cover
 from app.models import Place, Menu # pragma: no cover
 from flask import render_template, request, url_for, redirect, flash, jsonify # pragma: no cover
+from flask.ext.security import login_required
 import us # pragma: no cover 
+
 
 @app.route("/") 
 @app.route("/restaurants")

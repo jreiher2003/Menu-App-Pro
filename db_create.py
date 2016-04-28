@@ -1,5 +1,18 @@
-from app import db
-from app.models import Place, Menu
+from app import app,db
+# from app import db, user_datastore 
+from app.models import Place, Menu, User, Role
+from flask.ext.security.utils import encrypt_password
+
+def create_users():
+    user = User(
+        username="Jeffrey",
+        email="jeffreiher@gmail.com",
+        password="password"
+        )
+    db.session.add(user)
+    db.session.commit()
+
+
 
 def create_places():
     place1 = Place(name='Coffee Cafe', address="123 Cafe St.", city="Englewood", state="Florida", zip_="34225", website="http://cafe.com", phone="(941)585-3099", owner="Jeff Reiher", yrs_open=1)
@@ -93,6 +106,9 @@ def create_places():
 
 if __name__ == '__main__':
     db.drop_all()
+    
     print "Just Dropped all tables"
     db.create_all()
+    create_users()
+    print "users created"
     create_places()
