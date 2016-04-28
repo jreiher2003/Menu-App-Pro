@@ -1,24 +1,21 @@
-<html>
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
-</head>
+{% extends "base.html" %}
+{% block content %}
 
-<body>
+<div class="container">
     <p>state token = {{ STATE }}</p>
-<div id="signinButton">
-    <span class="g-signin"
-        data-scope="profile openid email"
-        data-clientid="61683668295-cchsh7fkgkkvad14lsl49gcogftsor3l.apps.googleusercontent.com"
-        data-redirecturi="postmessage"
-        data-accesstype="offline"
-        data-cookiepolicy="single_host_origin"
-        data-callback="signInCallback"
-        data-approvalprompt="force">
-    </span>
+    <div id="signinButton">
+        <span class="g-signin"
+            data-scope="profile openid email"
+            data-clientid="61683668295-cchsh7fkgkkvad14lsl49gcogftsor3l.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+        </span>
+    </div>
+    <div id="result"></div>
 </div>
-<div id="result"></div>
 
 <script>
 function signInCallback(authResult) {
@@ -49,6 +46,5 @@ function signInCallback(authResult) {
 };
 </script>
 
+{% endblock %}
 
-</body>
-</html>

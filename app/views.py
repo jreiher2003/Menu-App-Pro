@@ -4,7 +4,7 @@ from flask import render_template, request, url_for, redirect, flash, jsonify # 
 import us # pragma: no cover 
 
 @app.route("/") 
-@app.route("/restaurant/")
+@app.route("/restaurant")
 def show_places(): 
     all_places = Place.query.all()
     return render_template(
@@ -131,11 +131,11 @@ def delete_menu_item(place_id,menu_id):
         delete_menu=delete_menu
         )
 
-@app.route("/api/")
+@app.route("/api")
 def api():
     return "this is api page"
 
-@app.route("/restaurant/JSON/")
+@app.route("/restaurant/JSON")
 def restaurant_json():
     places = Place.query.all()
     return jsonify(Restaurants=[i.serialize for i in places])
@@ -159,14 +159,23 @@ from flask import make_response
 import random
 import string
 from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import credentials_from_code
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 import requests
 from pprint import pprint
+import os
+# from config.DevelopmentConfig
 
-CLIENT_ID = json.loads(open("client_secrets.json", "r").read())["web"]["client_id"]
-# print CLIENT_ID
+# CLIENT_ID = json.loads(open("client_secrets.json", "r").read())["web"]["client_id"]
+# print config.DevelopmentConfig.CLIENT_ID
+print os.environ["CLIENT_ID"]
+print os.environ["CLIENT_SECRET"]
+print os.environ["SCOPE"]
+print os.environ["GOOGLE_TOKEN_URI"]
+print os.environ["GOOGLE_AUTH_URI"]
+print os.environ["GOOGLE_REVOKE_URI"]
 
 @app.route("/login")
 def show_login():
@@ -177,16 +186,21 @@ def show_login():
 
 @app.route("/gconnect", methods=["POST"])
 def google_signin():
-    print request.args.get("state")
-    print login_session["state"]
+    # print request.args.get("state")
+    # print login_session["state"]
     if request.args.get("state") != login_session["state"]:
-        response = make_response(json.dumps("Invalid Credentials"), 401)
+        response = make_response(json.dumps("Invalid state parameter"), 401)
         response.headers["Content-Type"] = "application/json"
         return response
+
     code = request.data
+
     try:
+        ## credential_from code 
+        # oauth_flow = credentials_from_code(os.environ["CLIENT_ID"], os.environ["CLIENT_SECRET"], os.environ["SCOPE"], code, redirect_uri='postmessage', http=None, user_agent=None, token_uri=os.environ["GOOGLE_TOKEN_URI"], auth_uri=os.environ["GOOGLE_TOKEN_URI"], revoke_uri=os.environ["GOOGLE_REVOKE_URI"])
         oauth_flow = flow_from_clientsecrets("client_secrets.json", scope="")
-        pprint(type(oauth_flow))
+        # pprint(dir(oauth_flow))
+        # print oauth_flow.scope
         # print oauth_flow.auth_uri
         # print oauth_flow.authorization_header
         # print oauth_flow.device_uri
@@ -205,16 +219,16 @@ def google_signin():
         return response  
 
     access_token = credentials.access_token 
-    print access_token
+    # print access_token
     url = ("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s" % access_token)
     h = httplib2.Http() 
     result = json.loads(h.request(url, "GET")[1])
-    print result
+    # print result
 
     if result.get("error") is not None:
         response = make_response(json.dumps(result.get("error")), 500)
         response.headers["Content-Type"] = "application/json"
-        return response
+        # return response
 
     gplus_id = credentials.id_token["sub"]
     if result["user_id"] != gplus_id:
@@ -222,14 +236,21 @@ def google_signin():
         response.headers["Content-Type"] = "application/json"
         return response
 
-    stored_credentials = login_session.get("credentials")
+    # Verify that the access token is valid for this app.
+    if result['issued_to'] != os.environ["CLIENT_ID"]:
+        response = make_response(json.dumps("Token's client ID does not match app's."), 401)
+        print "Token's client ID does not match app's."
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    stored_access_token = login_session.get("access_token")
     stored_gplus_id = login_session.get("gplus_id")
-    if stored_credentials is not None and gplus_id == stored_gplus_id:
+    if stored_access_token is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps("Current user is already connected."), 200)
         response.headers["Content-Type"] = "application/json" 
         return response
 
-    login_session["credentials"] = credentials.access_token
+    login_session["access_token"] = credentials.access_token
     login_session["gplus_id"] = gplus_id 
 
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -237,7 +258,7 @@ def google_signin():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
-    print data
+    # print data
 
     login_session['username'] = data['name']
     login_session["name"] = data["given_name"]
@@ -255,26 +276,40 @@ def google_signin():
     print "done!"
     return output
 
+# @app.route("/gdisconnect/", methods=["GET"])
+# def disconnect():
+#     login_session.pop('credentials', None)
+#     login_session.pop("gplus_id", None)
+#     login_session.pop("username", None)
+#     login_session.pop("name", None)
+#     login_session.pop("email", None)
+#     login_session.pop("picture", None)
+#     referer = request.headers["Referer"]
+#     return redirect(referer)
 
-@app.route("/gdisconnect")
+
+@app.route("/gdisconnect", methods=["GET"])
 def disconnect():
-    access_token = login_session["credentials"]
-    print access_token
-    print login_session["username"]
+    access_token = login_session["access_token"]
+    print 'In gdisconnect access token is %s' % access_token
+    print 'User name is: ' 
+    print login_session['username']
 
     if access_token is None:
+        print "Access Token is None"
         response = make_response(json.dumps("Current user not connected"), 401)
         reponse.headers["Content-Type"] = "application/json"
         return response 
    
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session["access_token"]
     print url
     h = httplib2.Http()
     result = h.request(url, "GET")[0]
+    print "result is "
     print result
 
     if result["status"] == 200:
-        del login_session["credentials"]
+        del login_session["access_token"]
         del login_session["gplus_id"]
         del login_session["username"]
         del login_session["name"]
@@ -289,9 +324,10 @@ def disconnect():
         response = make_response(json.dumps("Failed to revoke token for given user."), 400)
         response.headers["Content-Type"] = "application/json"
         return response 
+    
 
 
 
-@app.route("/g_login_status/")
+@app.route("/g_login_status")
 def show_me():
     return "yo <img src='%s'><br>%s<br>%s" % (login_session["picture"], login_session["username"], login_session["email"])
