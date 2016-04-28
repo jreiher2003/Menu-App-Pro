@@ -5,4 +5,5 @@ env/
 coverage/
 *.log
 requirements1.txt
+client_secrets.json
 
