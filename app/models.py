@@ -8,12 +8,14 @@ class User(db.Model):
     username = db.Column(db.String)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
+    avatar = db.Column(db.String)
     created_at = db.Column(db.DateTime(),  default=datetime.datetime.now())
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, avatar):
         self.username = username
         self.email = email 
         self.password = bcrypt.generate_password_hash(password)
+        self.avatar = avatar
 
     @property 
     def serialize(self):

@@ -7,7 +7,8 @@ def create_users():
     user = User(
         username="Jeffrey",
         email="jeffreiher@gmail.com",
-        password="password"
+        password="password",
+        avatar="https://avatars0.githubusercontent.com/u/5870557?v=3&amp;s=460"
         )
     # role = Role(name="Admin", description="Super User of site")
     # userroles = UserRoles(user_id=1,role_id=1)
