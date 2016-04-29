@@ -1,7 +1,7 @@
 from app import app,db
 # from app import db, user_datastore 
-from app.models import Place, Menu, User, Role
-from flask.ext.security.utils import encrypt_password
+from app.models import Place, Menu, User#, Role, UserRoles
+#from flask.ext.security.utils import encrypt_password
 
 def create_users():
     user = User(
@@ -9,7 +9,12 @@ def create_users():
         email="jeffreiher@gmail.com",
         password="password"
         )
+    # role = Role(name="Admin", description="Super User of site")
+    # userroles = UserRoles(user_id=1,role_id=1)
     db.session.add(user)
+    # db.session.add(role)
+    # db.session.add(userroles)
+    
     db.session.commit()
 
 
