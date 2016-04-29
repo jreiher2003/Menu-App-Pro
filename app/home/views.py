@@ -34,7 +34,7 @@ def new_place():
 		db.session.add(new)
 		db.session.commit()
 		flash("You just added a new restaurant", "success")
-		return redirect(url_for("show_places"))
+		return redirect(url_for("home.show_places"))
 	return render_template("new_restaurant.html", states=states)
 
 @home_blueprint.route("/restaurant/<int:place_id>/edit", methods=["GET", "POST"])
@@ -55,7 +55,7 @@ def edit_place(place_id):
 		db.session.add(edit_rest)
 		db.session.commit()
 		flash("You just edited this restaurant", "success")
-		return redirect(url_for("show_places"))
+		return redirect(url_for("home.show_places"))
 	return render_template(
 		"edit_restaurant.html", 
 		place_id=place_id, 
@@ -70,7 +70,7 @@ def delete_place(place_id):
 		db.session.delete(delete_rest)
 		db.session.commit()
 		flash("You just deleted %s" % delete_rest.name, "danger")
-		return redirect(url_for("show_places"))
+		return redirect(url_for("home.show_places"))
 	return render_template(
 		"delete_restaurant.html", 
 		place_id=place_id, 
@@ -103,7 +103,7 @@ def new_menu_item(place_id):
 		db.session.add(new_menu)
 		db.session.commit()
 		flash("Just add a new menu item", "success")
-		return redirect(url_for("show_menu", place_id=place_id))
+		return redirect(url_for("home.show_menu", place_id=place_id))
 	return render_template(
 		"new_menu.html", 
 		place_id=place_id)
@@ -121,7 +121,7 @@ def edit_menu_item(place_id,menu_id):
 		db.session.add(edit_menu)
 		db.session.commit()
 		flash("Just edited menu item")
-		return redirect(url_for("show_menu", place_id=place_id))
+		return redirect(url_for("home.show_menu", place_id=place_id))
 	return render_template("edit_menu.html", 
 		place_id=place_id, 
 		menu_id=menu_id,
@@ -136,7 +136,7 @@ def delete_menu_item(place_id,menu_id):
 		db.session.delete(delete_menu)
 		db.session.commit()
 		flash("You just deleted %s" % delete_menu.name, "danger")
-		return redirect(url_for("show_menu", place_id=place_id))
+		return redirect(url_for("home.show_menu", place_id=place_id))
 	return render_template(
 		"delete_menu.html", 
 		place_id=place_id, 

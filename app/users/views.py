@@ -17,7 +17,7 @@ def login():
         if user is not None and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
             flash("You have signed in successfully!", "success")
-            return redirect(url_for("show_places"))
+            return redirect(url_for("home.show_places"))
         else:
             flash("<strong>Invalid Credentials.</strong> Please try again.", "danger")
             return redirect(url_for("users.login"))
@@ -30,7 +30,7 @@ def logout():
     # session.pop('logged_in', None)
     flash("You just logged out", "warning")
     referer = request.headers.get("Referer")
-    return redirect(referer or url_for("show_places"))
+    return redirect(referer or url_for("home.show_places"))
 
 @users_blueprint.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -43,5 +43,5 @@ def signup():
         db.session.commit()
         referer = request.headers.get("Referer")
         flash('Thanks for registering')
-        return redirect(referer or url_for('show_places'))
+        return redirect(referer or url_for('home.show_places'))
     return render_template('signup.html', form=form, error=error)

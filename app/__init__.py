@@ -26,7 +26,7 @@ from app.models import User, Place, Menu
 #user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 #security = Security(app, user_datastore) 
 
-login_manager.login_view = "login"
+login_manager.login_view = "users.login"
 login_manager.login_message = u'You need to login first!'
 login_manager.login_message_category = 'info'
 

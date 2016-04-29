@@ -5,6 +5,7 @@ from flask import request
 from app.models import Place, Menu
 
 class TestFrontPage(BaseTestCase):
+    
 
     def test_index_loads(self):
         response = self.client.get("/", follow_redirects=True)
@@ -40,32 +41,33 @@ class TestFrontPage(BaseTestCase):
             assert request.path == "/"
             assert request.method == "GET"
 
-    def test_create_new_restaurant(self):
-        response = self.client.get("/restaurant/new")
-        assert response.status_code == 200
-
     def test_place_name(self):
         response = self.client.get("/restaurant/1/menu")
         assert response.status_code == 200
 
+    def test_create_new_restaurant(self):
+        response = self.client.get("/restaurant/new", content_type='html/text', follow_redirects=True)
+        assert response.status_code == 200
+
+
     def test_place_edit(self):
-        response = self.client.get("/restaurant/1/edit")
+        response = self.client.get("/restaurant/1/edit", content_type='html/text', follow_redirects=True)
         assert response.status_code == 200
 
     def test_place_delete(self):
-        response = self.client.get("/restaurant/1/delete")
+        response = self.client.get("/restaurant/1/delete", content_type='html/text', follow_redirects=True)
         assert response.status_code == 200
 
     def test_create_new_menu_item(self):
-        response = self.client.get("/restaurant/1/new")
+        response = self.client.get("/restaurant/1/menu/new", content_type='html/text', follow_redirects=True)
         assert response.status_code == 200
 
     def test_menu_edit(self):
-        response = self.client.get("/restaurant/1/menu/1/edit")
+        response = self.client.get("/restaurant/1/menu/2/edit", content_type='html/text', follow_redirects=True)
         assert response.status_code == 200
 
     def test_menu_delete(self):
-        response = self.client.get("/restaurant/1/menu/1/delete")
+        response = self.client.get("/restaurant/1/menu/1/delete", content_type='html/text', follow_redirects=True)
         assert response.status_code == 200
 
 
