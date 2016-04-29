@@ -1,19 +1,21 @@
 from app import app,db # pragma: no cover
 from app.models import Place, Menu # pragma: no cover
-from flask import render_template, request, url_for, redirect, flash, jsonify # pragma: no cover
-from flask.ext.security import login_required
+from flask import Blueprint, render_template, request, url_for, redirect, flash # pragma: no cover
+from flask.ext.login import current_user, login_required
 import us # pragma: no cover 
 
+home_blueprint = Blueprint("home", __name__, template_folder="templates") 
 
-@app.route("/") 
-@app.route("/restaurants")
+@home_blueprint.route("/") 
+@home_blueprint.route("/restaurants")
 def show_places(): 
 	all_places = Place.query.all()
 	return render_template(
 		'restaurants.html', 
 		all_places=all_places)
 
-@app.route("/restaurant/new", methods=["GET", "POST"])
+@home_blueprint.route("/restaurant/new", methods=["GET", "POST"])
+@login_required
 def new_place():
 	states = us.states.STATES 
 	if request.method == "POST":
@@ -26,7 +28,8 @@ def new_place():
 			website=request.form["website"],
 			phone=request.form["phone"],
 			owner=request.form["owner"],
-			yrs_open=request.form["yrs_open"]
+			yrs_open=request.form["yrs_open"],
+			user_id=current_user.id
 			)
 		db.session.add(new)
 		db.session.commit()
@@ -34,7 +37,8 @@ def new_place():
 		return redirect(url_for("show_places"))
 	return render_template("new_restaurant.html", states=states)
 
-@app.route("/restaurant/<int:place_id>/edit", methods=["GET", "POST"])
+@home_blueprint.route("/restaurant/<int:place_id>/edit", methods=["GET", "POST"])
+@login_required
 def edit_place(place_id):
 	edit_rest = Place.query.filter_by(id=place_id).one()
 	if request.method == "POST":
@@ -47,6 +51,7 @@ def edit_place(place_id):
 		edit_rest.phone = request.form["phone"]
 		edit_rest.owner = request.form["owner"]
 		edit_rest.yrs_open = request.form["yrs_open"]
+		edit_rest.last_edit = current_user.id
 		db.session.add(edit_rest)
 		db.session.commit()
 		flash("You just edited this restaurant", "success")
@@ -57,7 +62,8 @@ def edit_place(place_id):
 		edit_rest=edit_rest
 		) 
 
-@app.route("/restaurant/<int:place_id>/delete", methods=["GET", "POST"])
+@home_blueprint.route("/restaurant/<int:place_id>/delete", methods=["GET", "POST"])
+@login_required
 def delete_place(place_id):
 	delete_rest = Place.query.filter_by(id=place_id).one()
 	if request.method == "POST":
@@ -71,8 +77,8 @@ def delete_place(place_id):
 		delete_rest=delete_rest
 		)
 	
-@app.route("/restaurant/<int:place_id>/menu")
-@app.route("/restaurant/<int:place_id>")
+@home_blueprint.route("/restaurant/<int:place_id>/menu")
+@home_blueprint.route("/restaurant/<int:place_id>")
 def show_menu(place_id):
 	place = Place.query.filter_by(id = place_id).one()
 	menuitems = Menu.query.filter(Menu.place_id == place_id).all()
@@ -82,7 +88,8 @@ def show_menu(place_id):
 		menuitems=menuitems
 		)
 
-@app.route("/restaurant/<int:place_id>/menu/new", methods=["GET", "POST"])
+@home_blueprint.route("/restaurant/<int:place_id>/menu/new", methods=["GET", "POST"])
+@login_required
 def new_menu_item(place_id):
 	if request.method == "POST":
 		new_menu = Menu(
@@ -90,7 +97,8 @@ def new_menu_item(place_id):
 			course = request.form["course"],
 			description = request.form["description"],
 			price = request.form["price"],
-			place_id = place_id
+			place_id = place_id,
+			user_id = current_user.id 
 			)
 		db.session.add(new_menu)
 		db.session.commit()
@@ -100,7 +108,8 @@ def new_menu_item(place_id):
 		"new_menu.html", 
 		place_id=place_id)
 
-@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/edit", methods=["GET","POST"])
+@home_blueprint.route("/restaurant/<int:place_id>/menu/<int:menu_id>/edit", methods=["GET","POST"])
+@login_required
 def edit_menu_item(place_id,menu_id):
 	edit_menu = Menu.query.filter_by(id=menu_id).one()
 	if request.method == "POST":
@@ -108,6 +117,7 @@ def edit_menu_item(place_id,menu_id):
 		edit_menu.course = request.form["course"]
 		edit_menu.description = request.form["description"]
 		edit_menu.price = request.form["price"]
+		edit_menu.last_edit = current_user.id
 		db.session.add(edit_menu)
 		db.session.commit()
 		flash("Just edited menu item")
@@ -118,7 +128,8 @@ def edit_menu_item(place_id,menu_id):
 		edit_menu=edit_menu
 		)
 
-@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/delete", methods=["GET","POST"])
+@home_blueprint.route("/restaurant/<int:place_id>/menu/<int:menu_id>/delete", methods=["GET","POST"])
+@login_required
 def delete_menu_item(place_id,menu_id):
 	delete_menu = Menu.query.filter_by(id=menu_id).one()
 	if request.method == "POST":
@@ -133,21 +144,3 @@ def delete_menu_item(place_id,menu_id):
 		delete_menu=delete_menu
 		)
 
-@app.route("/api/")
-def api():
-	return "this is api page"
-
-@app.route("/restaurant/JSON/")
-def restaurant_json():
-	places = Place.query.all()
-	return jsonify(Restaurants=[i.serialize for i in places])
-
-@app.route("/restaurant/<int:place_id>/menu/JSON")
-def menu_json(place_id):
-	menu = Menu.query.filter_by(place_id=place_id).all()
-	return jsonify(MenuItems=[i.serialize for i in menu])
-
-@app.route("/restaurant/<int:place_id>/menu/<int:menu_id>/JSON")
-def single_menu_item(place_id, menu_id):
-	menu = Menu.query.filter_by(id=menu_id).all()
-	return jsonify(MenuItem=[i.serialize for i in menu])

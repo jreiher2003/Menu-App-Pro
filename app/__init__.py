@@ -15,9 +15,13 @@ login_manager.init_app(app)
 
 from app.users.views import users_blueprint
 app.register_blueprint(users_blueprint) 
+from app.api.views import api_blueprint
+app.register_blueprint(api_blueprint)
+from app.home.views import home_blueprint
+app.register_blueprint(home_blueprint)
 
-from app import views, models
-from models import * 
+
+from app.models import User, Place, Menu
 
 #user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 #security = Security(app, user_datastore) 

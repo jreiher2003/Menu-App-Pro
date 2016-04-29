@@ -1,28 +1,28 @@
 import datetime # pragma: no cover
 from app import db, bcrypt # pragma: no cover
 from slugify import slugify # pragma: no cover
-#from flask.ext.security import UserMixin, RoleMixin
 
-
-# class Role(db.Model, RoleMixin):
-#     id = db.Column(db.Integer(), primary_key=True)
-#     name = db.Column(db.String(80), unique=True)
-#     description = db.Column(db.String(255))
-#     roles = db.relationship('UserRoles', cascade="save-update,merge,delete")
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime(),  default=datetime.datetime.now())
-    # roles = db.relationship('UserRoles', cascade="save-update,merge,delete")
+    created_at = db.Column(db.DateTime(),  default=datetime.datetime.now())
 
     def __init__(self, username, email, password):
         self.username = username
         self.email = email 
         self.password = bcrypt.generate_password_hash(password)
+
+    @property 
+    def serialize(self):
+        return {
+        "id": self.id,
+        "username": self.username,
+        "email": self.email,
+        "created_at": self.created_at
+        }
 
     def is_authenticated(self):
         return True
@@ -35,11 +35,6 @@ class User(db.Model):
 
     def get_id(self):
         return unicode(self.id)
-
-# Define models
-# class UserRoles(db.Model):
-#     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'), primary_key=True)
-#     role_id = db.Column(db.Integer(), db.ForeignKey('role.id'), primary_key=True)
     
 
 class Place(db.Model):
@@ -56,6 +51,10 @@ class Place(db.Model):
     phone = db.Column(db.String)
     owner = db.Column(db.String)
     yrs_open = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    users = db.relationship("User")
+    last_edit = db.Column(db.Integer)
+    
 
 
     @property 
@@ -91,6 +90,10 @@ class Menu(db.Model):
     price = db.Column(db.String(8))
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     place = db.relationship(Place)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    users = db.relationship("User")
+    last_edit = db.Column(db.Integer)
+    
 
     @property 
     def name_slug(self):
