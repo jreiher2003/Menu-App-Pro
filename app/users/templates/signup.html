@@ -17,6 +17,13 @@
         {% endfor %}
     {% endif %}
 
+    {{ form.avatar(placeholder="avatar") }}
+    {% if form.avatar.errors %}
+        {% for error in form.avatar.errors %}
+            {{ error }}
+        {% endfor %}
+    {% endif %}
+
     {{ form.password(placeholder="password") }}
     {% if form.password.errors %}
         {% for error in form.password.errors %}

@@ -6,7 +6,8 @@ from flask_wtf.html5 import EmailField
 
 class RegistrationForm(Form):
     username = TextField('Username', [Length(min=4, max=25),Required()])
-    email = TextField('Email Address', [Length(min=6, max=35)])
+    email = TextField('Email Address', [Length(min=6, max=35),Required()])
+    avatar = TextField("Avatar")
     password = PasswordField('New Password', [
         Required(),
         EqualTo('confirm', message='Passwords must match')

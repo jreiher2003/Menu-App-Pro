@@ -17,6 +17,9 @@ class User(db.Model):
         self.password = bcrypt.generate_password_hash(password)
         self.avatar = avatar
 
+    def __repr__(self):
+        return "<username-{}".format(self.username)
+
     @property 
     def serialize(self):
         return {

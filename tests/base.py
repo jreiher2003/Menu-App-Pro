@@ -1,10 +1,6 @@
-import datetime
 from flask.ext.testing import TestCase
 from app import app, db
 from app.models import Place, Menu, User
-
-
-
 
 
 
@@ -13,12 +9,6 @@ class BaseTestCase(TestCase):
  
     def create_app(self):
         app.config.from_object('config.TestConfig')
-        # from app.users.views import users_blueprint
-        # from app.api.views import api_blueprint
-        # from app.home.views import home_blueprint
-        # app.register_blueprint(users_blueprint) 
-        # app.register_blueprint(api_blueprint)
-        # app.register_blueprint(home_blueprint)
         return app
 
     def setUp(self):

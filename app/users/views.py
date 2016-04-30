@@ -1,4 +1,4 @@
-from app import app, bcrypt
+from app import app, bcrypt, db
 from flask import Blueprint, render_template, url_for, request, flash, redirect
 from flask.ext.login import login_required, login_user, logout_user
 from app.forms import RegistrationForm, LoginForm
@@ -37,8 +37,12 @@ def signup():
     error = None
     form = RegistrationForm(request.form)
     if form.validate_on_submit():
-        user = User(form.username.data, form.email.data,
-                    form.password.data)
+        user = User(
+            username=form.username.data, 
+            email=form.email.data,
+            avatar=form.avatar.data,
+            password=form.password.data
+            )
         db.session.add(user)
         db.session.commit()
         referer = request.headers.get("Referer")
