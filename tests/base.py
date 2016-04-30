@@ -9,6 +9,7 @@ class BaseTestCase(TestCase):
  
     def create_app(self):
         app.config.from_object('config.TestConfig')
+        app.test_client()
         return app
 
     def setUp(self):
@@ -26,7 +27,8 @@ class BaseTestCase(TestCase):
         db.session.add(Menu(name="burger",
                             course="dinner",
                             description="test description",
-                            price="$1.00"))
+                            price="$1.00",
+                            place_id=1))
         
         db.session.add(User(username="Jeffrey",
                             email="jeffreiher@gmail.com",

@@ -13,7 +13,6 @@ def login():
     form = LoginForm(request.form) 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        print user.email
         if user is not None and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
             flash("You have signed in successfully!", "success")
