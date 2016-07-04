@@ -90,8 +90,8 @@ class Menu(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    course = db.Column(db.String(250))
-    description = db.Column(db.String(250))
+    course = db.Column(db.String)
+    description = db.Column(db.String)
     price = db.Column(db.String(8))
     place_id = db.Column(db.Integer, db.ForeignKey('place.id'))
     place = db.relationship(Place)
