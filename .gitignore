@@ -1,6 +1,6 @@
 *.pyc 
 *.db
-env/
+venv/
 *.bat
 coverage/
 *.log

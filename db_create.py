@@ -5,7 +5,7 @@ from app.models import Place, Menu, User#, Role, UserRoles
 
 def create_users():
     user = User(
-        username="Jeffrey",
+        username="j3ff_",
         email="jeffreiher@gmail.com",
         password="password",
         avatar="https://avatars0.githubusercontent.com/u/5870557?v=3&amp;s=460"
@@ -112,7 +112,6 @@ def create_places():
 
 if __name__ == '__main__':
     db.drop_all()
-    
     print "Just Dropped all tables"
     db.create_all()
     create_users()
